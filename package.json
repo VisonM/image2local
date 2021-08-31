@@ -1,0 +1,29 @@
+{
+  "name": "image2local",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "i2l": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Vision_X",
+  "license": "ISC",
+  "devDependencies": {
+    "colors": "^1.4.0",
+    "diff": "^5.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cli-progress": "^3.9.0",
+    "commander": "^8.1.0",
+    "node-color-log": "^5.3.1",
+    "ora": "^5.4.1",
+    "p-queue": "^6.6.2",
+    "prettier": "^2.3.2",
+    "promise-retry": "^2.0.1"
+  }
+}
