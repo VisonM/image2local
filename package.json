@@ -1,6 +1,6 @@
 {
   "name": "image2local",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a tool,a potentially effective tool",
   "main": "index.js",
   "bin": {
@@ -17,14 +17,12 @@
   ],
   "author": "Vision_X",
   "license": "MIT",
-  "devDependencies": {
-    "colors": "^1.4.0",
-    "diff": "^5.0.0"
-  },
   "dependencies": {
     "axios": "^0.21.1",
     "cli-progress": "^3.9.0",
+    "colors": "^1.4.0",
     "commander": "^8.1.0",
+    "diff": "^5.0.0",
     "mdless": "^2.0.1",
     "node-color-log": "^5.3.1",
     "ora": "^5.4.1",
