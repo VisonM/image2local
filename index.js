@@ -4,7 +4,7 @@ const { readFileSync, writeFileSync, existsSync } = require("fs");
 const prettier = require("prettier");
 const { program } = require("commander");
 const { default: PQueue } = require("p-queue");
-const { exec } = require("child_process");
+const { exec, spawn } = require("child_process");
 const promiseRetry = require("promise-retry");
 const cliProgress = require("cli-progress");
 const ora = require("ora");
@@ -23,6 +23,7 @@ const {
   getImageName,
   getParser,
   defaultOptions,
+  root,
 } = require("./utils/helper");
 
 if (!Promise.allSettled) {
@@ -69,12 +70,12 @@ program
   .command("all")
   .description("从src/pages开始转换所有的资源")
   .argument("<fakePkgs>", "马甲包")
-  .option("-d, --debug", "显示日志")
-  .action((fakePkgs, { debug }) => {
+  .option("-l, --loglevel <level>", "日志级别")
+  .action((fakePkgs, { loglevel }) => {
     const options = {
       ...defaultOptions,
       fakePkgList: fakePkgs.split(","),
-      debug,
+      loglevel,
     };
 
     const allPkgs = getAllPkgs(options);
@@ -89,11 +90,11 @@ program
   .command("pkg")
   .description("转换一个马甲包的资源")
   .argument("<p>", "文件路径")
-  .option("-d, --debug", "显示日志")
-  .action((p, { debug }) => {
+  .option("-l, --loglevel <level>", "日志级别")
+  .action((p, { loglevel }) => {
     const options = {
       ...defaultOptions,
-      debug,
+      loglevel,
     };
     const allPages = getAllPageInPkg(getPathFromWorkspace(p), options);
     main(allPages, options);
@@ -103,11 +104,11 @@ program
   .command("page")
   .description("转换一个页面的资源")
   .argument("<p>", "文件路径")
-  .option("-d, --debug", "显示日志")
-  .action((p, { debug }) => {
+  .option("-l, --loglevel <level>", "日志级别")
+  .action((p, { loglevel }) => {
     const options = {
       ...defaultOptions,
-      debug,
+      loglevel,
     };
     main([getPathFromWorkspace(p)], options);
   });
@@ -120,6 +121,20 @@ program
     exec("git clean -d -f");
   });
 
+program
+  .command("docs")
+  .description("查看README")
+  .action(() => {
+    spawn(
+      "node",
+      [
+        path.resolve(__dirname, "./node_modules/mdless"),
+        path.resolve(__dirname, "./README.md"),
+      ],
+      { shell: true, stdio: "inherit" }
+    );
+  });
+
 program.parse(process.argv);
 
 async function main(allPages, options) {
@@ -128,16 +143,15 @@ async function main(allPages, options) {
     {
       stopOnComplete: true,
       clearOnComplete: true,
-      forceRedraw: true,
     },
     cliProgress.Presets.shades_classic
   );
   try {
-    const { log, close, open } = require("./utils/log");
-    if (!options.debug) {
+    const { log, close, setLevel } = require("./utils/log");
+    if (!options.loglevel) {
       close();
     } else {
-      open();
+      setLevel(options.loglevel);
     }
     const queue = new PQueue({
       concurrency: options.downloadConcurrency,
@@ -231,8 +245,8 @@ async function main(allPages, options) {
   } catch (e) {
     console.log(e);
   } finally {
-    spinner.stop();
     progressBar.stop();
+    spinner.succeed("转换完成");
     console.log(`
       -----🌈----\n
       git diff / git status 查看转换结果

@@ -1,17 +1,22 @@
 {
   "name": "image2local",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "a tool,a potentially effective tool",
   "main": "index.js",
   "bin": {
     "i2l": "./index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "echo \"\u001b[36m\u001b[1m\nMy name is Vision_X, an individual😆\u001b[0m\n\""
   },
-  "keywords": [],
+  "keywords": [
+    "cv",
+    "cli",
+    "tool",
+    "download"
+  ],
   "author": "Vision_X",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "colors": "^1.4.0",
     "diff": "^5.0.0"
@@ -20,6 +25,7 @@
     "axios": "^0.21.1",
     "cli-progress": "^3.9.0",
     "commander": "^8.1.0",
+    "mdless": "^2.0.1",
     "node-color-log": "^5.3.1",
     "ora": "^5.4.1",
     "p-queue": "^6.6.2",

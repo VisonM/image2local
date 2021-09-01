@@ -16,4 +16,7 @@ module.exports.close = function () {
 module.exports.open = function () {
   logger.setLevel("debug");
 };
+module.exports.setLevel = function (level) {
+  logger.setLevel(level);
+};
 module.exports.log = myLog;
