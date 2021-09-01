@@ -1,6 +1,6 @@
 {
   "name": "image2local",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a tool,a potentially effective tool",
   "main": "index.js",
   "bin": {

@@ -110,6 +110,9 @@ const getUrlWithHttps = (str) => "https:" + str.replace(/https?:/, "");
 const getRelativePath = (originFile, assest, filename) =>
   `./${path.relative(path.dirname(originFile), assest)}/${filename}`;
 
+const getAliaPath = (_, assest, filename) =>
+  `~${path.relative(getPathFromWorkspace("./src"), assest)}/${filename}`;
+
 const removeQuote = (str) => str.slice(1, -1);
 
 const diffTwoString = (one, other) => {
@@ -134,6 +137,7 @@ module.exports = {
   diffTwoString,
   removeQuote,
   getRelativePath,
+  getAliaPath,
   download,
   getImageName,
   getDirectories,

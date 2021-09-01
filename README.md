@@ -12,6 +12,7 @@
 - 即使提供了全量一次性替换，仍然建议少量多次,具体请查看`i2l -h`
 - 下载限制同时 10 条，会重试
 - 即使项目中已经把静态图片转为本地，但是服务端下发的图片，仍然是无法处理的，所以服务端下发的图片，建议过一层裁剪服务，以达到图片域名为当前访问域目的。
+- 无依赖追踪，所以可能存在有复杂关联场景时，漏处理，需手动替换。
 
 ## 可转换的格式
 
@@ -82,10 +83,12 @@ i2l pkg ./src/pages/windmoon --loglevel=error
   - `warn`
   - `info`
   - `debug`
+- 可选参数：`-a` | `--alia`
 - 示例：
 
 ```bash
 i2l page ./src/pages/windmoon/setPrice --loglevel=error
+i2l page ./src/styles -a # 将style目录中的公共图片，转成～/style/assest/images/xxx.png
 ```
 
 #### clear

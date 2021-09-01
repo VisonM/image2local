@@ -24,6 +24,7 @@ const {
   getParser,
   defaultOptions,
   root,
+  getAliaPath,
 } = require("./utils/helper");
 
 if (!Promise.allSettled) {
@@ -104,11 +105,13 @@ program
   .command("page")
   .description("转换一个页面的资源")
   .argument("<p>", "文件路径")
+  .option("-a, --alia", "生成路径是否使用别名,别名默认以src作为root")
   .option("-l, --loglevel <level>", "日志级别")
-  .action((p, { loglevel }) => {
+  .action((p, { loglevel, alia }) => {
     const options = {
       ...defaultOptions,
       loglevel,
+      alia,
     };
     main([getPathFromWorkspace(p)], options);
   });
@@ -153,6 +156,7 @@ async function main(allPages, options) {
     } else {
       setLevel(options.loglevel);
     }
+    const getPath = options.alia ? getAliaPath : getRelativePath;
     const queue = new PQueue({
       concurrency: options.downloadConcurrency,
       autoStart: false,
@@ -209,7 +213,7 @@ async function main(allPages, options) {
 
             if (isFileType(file, "js")) {
               if (match.indexOf("src") > -1) {
-                return `src={require('${getRelativePath(
+                return `src={require('${getPath(
                   file,
                   assestPath,
                   filename
@@ -218,18 +222,16 @@ async function main(allPages, options) {
                 return (
                   "`url(" +
                   "${require('" +
-                  getRelativePath(file, assestPath, filename) +
+                  getPath(file, assestPath, filename) +
                   "')}" +
                   ")`"
                 );
               }
-              return (
-                "require('" + getRelativePath(file, assestPath, filename) + "')"
-              );
+              return "require('" + getPath(file, assestPath, filename) + "')";
             }
 
             if (isFileType(file, "less")) {
-              return `url('${getRelativePath(file, assestPath, filename)}')`;
+              return `url('${getPath(file, assestPath, filename)}')`;
             }
           });
           writeFileSync(file, newRes);
