@@ -89,10 +89,9 @@ const download = async (url, dir, retry) => {
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
     }
-    if (response && response.data) {
-      response.data.pipe(createWriteStream(absoultPath));
-    }
-    await streamToPromise(response.data);
+    const writer = createWriteStream(absoultPath);
+    response.data.pipe(writer);
+    await streamToPromise(writer);
   } catch (error) {
     retry && retry();
   }
